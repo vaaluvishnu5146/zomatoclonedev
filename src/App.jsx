@@ -1,64 +1,69 @@
 import "./App.css";
+import React, { useState, useEffect, useLayoutEffect } from "react";
 import PriceCard from "./Components/PriceCard/PriceCard";
-
-const pricingDetails = [
-  {
-    pricing: 0,
-    priceType: "FREE",
-    features: [
-      { feature: "Single User", isAvailable: true },
-      { feature: "5GB Storage", isAvailable: true },
-      { feature: "Unlimited Public Projects", isAvailable: true },
-      { feature: "Community Access", isAvailable: true },
-      { feature: "Unlimited Private Projects", isAvailable: false },
-      { feature: "Dedicated Phone Support", isAvailable: false },
-      { feature: "Free Subdomain", isAvailable: false },
-      { feature: "Monthly Status Reports", isAvailable: false },
-    ],
-  },
-  {
-    pricing: 10,
-    priceType: "PAID",
-    features: [
-      { feature: "Single User", isAvailable: true },
-      { feature: "5GB Storage", isAvailable: true },
-      { feature: "Unlimited Public Projects", isAvailable: true },
-      { feature: "Community Access", isAvailable: true },
-      { feature: "Unlimited Private Projects", isAvailable: true },
-      { feature: "Dedicated Phone Support", isAvailable: true },
-      { feature: "Free Subdomain", isAvailable: false },
-      { feature: "Monthly Status Reports", isAvailable: false },
-    ],
-  },
-  {
-    pricing: 20,
-    priceType: "PAID",
-    features: [
-      { feature: "Single User", isAvailable: true },
-      { feature: "5GB Storage", isAvailable: true },
-      { feature: "Unlimited Public Projects", isAvailable: true },
-      { feature: "Community Access", isAvailable: true },
-      { feature: "Unlimited Private Projects", isAvailable: true },
-      { feature: "Dedicated Phone Support", isAvailable: true },
-      { feature: "Free Subdomain", isAvailable: true },
-      { feature: "Monthly Status Reports", isAvailable: true },
-    ],
-  },
-];
+import Todo from "./Pages/Todo";
+import Home from "./Pages/home";
+import Aboutus from "./Pages/aboutus";
+import Contactus from "./Pages/contactus";
+import Shopping from "./Pages/shopping";
+import { Routes, Route, Link } from "react-router-dom";
+import Blog from "./Pages/blog";
 
 // FUNCTIONAL COMPONENT
 function App() {
+  /**
+   * useState is a hook
+   * Hook is a functionmality that has been developed for Functional components
+   * {Whatever the functionality is available in class component cannot be used inside the functinal component,
+   * so to make all thise functionality available for Functional component Hooks has been introduced into react.}
+   */
+  const [pricing, setPricing] = useState([]);
+
+  /**
+   * LIFECYCLE METHOD
+   */
+  useEffect(() => {
+    console.log("Effect");
+    fetch("http://localhost:3000/mocks/pricing.json")
+      .then((response) => response.json())
+      .then((result) => {
+        if (result.data) {
+          setPricing(result.data);
+        }
+      });
+  }, []);
+
+  useLayoutEffect(() => {
+    console.log("Layout Effect");
+  }, []);
+
   return (
     <div className="App">
-      <section className="pricing py-5">
-        <div className="container">
-          <div className="row">
-            {pricingDetails.map((d, i) => (
-              <PriceCard data={d} key={`pricing-card-${i}`} />
-            ))}
-          </div>
-        </div>
-      </section>
+      <div>
+        <Link to="/">
+          <p>Home</p>
+        </Link>
+        <Link to="/aboutus">
+          <p>About Us</p>
+        </Link>
+        <Link to="/contactus">
+          <p>Contact Us</p>
+        </Link>
+        <Link to="/shopping/mens-tshirt">
+          <p>Shopping</p>
+        </Link>
+        <Link to="/todo">
+          <p>Todo App</p>
+        </Link>
+      </div>
+      <Routes>
+        <Route path="/" Component={Home} />
+        <Route path="/aboutus" Component={Aboutus} />
+        <Route path="/contactus" Component={Contactus} />
+        <Route path="/shopping/:productCategory" Component={Shopping} />
+        <Route path="/blog/:productCategory" Component={Blog} />
+        <Route path="/todo" Component={Todo} />
+      </Routes>
     </div>
   );
 }
