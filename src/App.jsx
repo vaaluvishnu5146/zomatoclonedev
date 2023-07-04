@@ -39,23 +39,29 @@ function App() {
 
   return (
     <div className="App">
-      <div>
-        <Link to="/">
-          <p>Home</p>
-        </Link>
-        <Link to="/aboutus">
-          <p>About Us</p>
-        </Link>
-        <Link to="/contactus">
-          <p>Contact Us</p>
-        </Link>
-        <Link to="/shopping/mens-tshirt">
-          <p>Shopping</p>
-        </Link>
-        <Link to="/todo">
-          <p>Todo App</p>
-        </Link>
-      </div>
+      <nav class="navbar bg-body-tertiary">
+        <div class="container-fluid">
+          <span class="navbar-brand mb-0 h1">Navbar</span>
+          <ul className="nav">
+            <Link to="/" className="nav-item">
+              <p>Home</p>
+            </Link>
+            <Link to="/aboutus" className="nav-item">
+              <p>About Us</p>
+            </Link>
+            <Link to="/contactus" className="nav-item">
+              <p>Contact Us</p>
+            </Link>
+            <Link to="/shopping/mens-tshirt" className="nav-item">
+              <p>Shopping</p>
+            </Link>
+            <Link to="/todo" className="nav-item">
+              <p>Todo App</p>
+            </Link>
+          </ul>
+        </div>
+      </nav>
+
       <Routes>
         <Route path="/" Component={Home} />
         <Route path="/aboutus" Component={Aboutus} />
