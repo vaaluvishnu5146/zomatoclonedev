@@ -42,7 +42,6 @@ export default function Todo() {
   }
 
   function handleInput(e) {
-    console.log(e.target.id, e.target.value);
     let todoCopy = {
       ...todo,
       status: "not completed",
@@ -62,6 +61,7 @@ export default function Todo() {
       let matchedData = todosCopy.filter((d) => d.title !== todo.title);
       matchedData.push(todo);
       setTodos(matchedData);
+      setTodo({});
       setMode("create");
     }
   }
@@ -72,8 +72,10 @@ export default function Todo() {
     setTodos(matchedData);
   }
 
-  function renderCards(data = []) {
-    return data.map((d, i) => (
+  function renderCards(data = [], filterType = "all") {
+    const _d =
+      filterType === "all" ? data : todos.filter((d) => d.status === filter);
+    return _d.map((d, i) => (
       <TaskCard
         data={d}
         key={`${d.title}-${i}`}
@@ -86,7 +88,7 @@ export default function Todo() {
   return (
     <div className="container">
       <div className="container-fluid">
-        <div className="card">
+        <div className="card mb-3">
           <div className="card-body">
             <div className="row">
               <div className="col-4">
@@ -129,11 +131,18 @@ export default function Todo() {
             </div>
           </div>
         </div>
-        <div className="row">
-          {filter === "all"
-            ? renderCards(todos)
-            : renderCards(todos.filter((d) => d.status === filter))}
+        <div className="row d-flex flex-row-reverse mb-3">
+          <div className="col-2">
+            <BasicDropdown
+              label="Filter"
+              id="filter"
+              options={[{ label: "All", value: "all" }, ...status]}
+              onSelect={(e) => setFilter(e.target.value)}
+              value={filter}
+            />
+          </div>
         </div>
+        <div className="row">{renderCards(todos, filter)}</div>
       </div>
     </div>
   );
