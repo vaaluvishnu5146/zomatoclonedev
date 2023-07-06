@@ -1,14 +1,17 @@
-import React from "react";
+import React, { forwardRef } from "react";
 
-export default function TextInput({
-  label = "",
-  type = "",
-  id = "",
-  placeholder = "",
-  value = "",
-  onChange = (e) => {},
-  disabled = false,
-}) {
+const TextInput = forwardRef(function TextInput(
+  {
+    label = "",
+    type = "",
+    id = "",
+    placeholder = "",
+    value = "",
+    onChange = (e) => {},
+    disabled = false,
+  },
+  ref
+) {
   return (
     <div class="mb-3 text-start">
       <label for={id} class="form-label">
@@ -22,7 +25,10 @@ export default function TextInput({
         value={value}
         onChange={onChange}
         disabled={disabled}
+        ref={ref}
       />
     </div>
   );
-}
+});
+
+export default TextInput;

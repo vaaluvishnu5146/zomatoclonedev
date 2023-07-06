@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef, useReducer } from "react";
 import TextInput from "../Elements/TextInput/TextInput";
 import BasicDropdown from "../Elements/Dropdowns/BasicDropdown";
 import TaskCard from "../Elements/Card/TaskCard";
@@ -7,6 +7,13 @@ const initialTodoState = {
   title: "",
   description: "",
   status: false,
+};
+
+const initialState = {
+  todos: [],
+  todo: Object.assign({}, initialTodoState),
+  mode: "create",
+  filter: "all",
 };
 
 const status = [
@@ -20,61 +27,90 @@ const status = [
   },
 ];
 
+function reducer(state, action) {
+  switch (action.type) {
+    case "UPDATE_TODOS":
+      return {
+        ...state,
+        todos: action.payload,
+      };
+    case "UPDATE_TODO":
+      return {
+        ...state,
+        todo: action.payload,
+      };
+    case "UPDATE_MODE":
+      return {
+        ...state,
+        mode: action.payload,
+      };
+    case "UPDATE_FILTER":
+      return {
+        ...state,
+        filter: action.payload,
+      };
+    default:
+      console.log("GREET");
+      break;
+  }
+}
+
 export default function Todo() {
-  const [todos, setTodos] = useState([]);
-  const [todo, setTodo] = useState({
-    title: "",
-    description: "",
-    status: "not completed",
-  });
-  const [mode, setMode] = useState("create");
-  const [filter, setFilter] = useState("all");
+  const [state, dispatch] = useReducer(reducer, initialState);
+  const todoTitleInput = useRef(null);
 
   useEffect(() => {
+    if (todoTitleInput) {
+      todoTitleInput.current.focus();
+      // todoTitleInput.current.style.backgroundColor = "red";
+    }
     return () => {};
   }, []);
 
   function handleTodo() {
-    const todosCopy = [...todos];
-    todosCopy.push(todo);
-    setTodo({});
-    setTodos(todosCopy);
+    const todosCopy = [...state.todos];
+    todosCopy.push(state.todo);
+    dispatch({ type: "UPDATE_TODO", payload: initialTodoState });
+    dispatch({ type: "UPDATE_TODOS", payload: todosCopy });
   }
 
   function handleInput(e) {
+    console.log(e.target.value);
     let todoCopy = {
-      ...todo,
+      ...state.todo,
       status: "not completed",
     };
     todoCopy[e.target.id] = e.target.value;
-    setTodo(todoCopy);
+    dispatch({ type: "UPDATE_TODO", payload: todoCopy });
   }
 
   function handleEdit(data = {}) {
-    setMode("edit");
-    setTodo(data);
+    dispatch({ type: "UPDATE_MODE", payload: "edit" });
+    dispatch({ type: "UPDATE_TODO", payload: data });
   }
 
   function handleUpdateTodo(e) {
-    if (mode === "edit") {
-      let todosCopy = [...todos];
-      let matchedData = todosCopy.filter((d) => d.title !== todo.title);
-      matchedData.push(todo);
-      setTodos(matchedData);
-      setTodo({});
-      setMode("create");
+    if (state.mode === "edit") {
+      let todosCopy = [...state.todos];
+      let matchedData = todosCopy.filter((d) => d.title !== state.todo.title);
+      matchedData.push(state.todo);
+      dispatch({ type: "UPDATE_TODOS", payload: matchedData });
+      dispatch({ type: "UPDATE_TODO", payload: initialTodoState });
+      dispatch({ type: "UPDATE_MODE", payload: "create" });
     }
   }
 
   function handleDeleteTodo(title = "") {
-    let todosCopy = [...todos];
+    let todosCopy = [...state.todos];
     let matchedData = todosCopy.filter((d) => d.title !== title);
-    setTodos(matchedData);
+    dispatch({ type: "UPDATE_TODOS", payload: matchedData });
   }
 
   function renderCards(data = [], filterType = "all") {
     const _d =
-      filterType === "all" ? data : todos.filter((d) => d.status === filter);
+      filterType === "all"
+        ? data
+        : state.todos.filter((d) => d.status === state.filter);
     return _d.map((d, i) => (
       <TaskCard
         data={d}
@@ -96,9 +132,10 @@ export default function Todo() {
                   label="Title"
                   placeholder="Enter Task title here"
                   id="title"
-                  value={todo["title"]}
+                  value={state.todo["title"]}
                   onChange={handleInput}
-                  disabled={mode === "edit"}
+                  disabled={state.mode === "edit"}
+                  ref={todoTitleInput}
                 />
               </div>
               <div className="col-4">
@@ -106,7 +143,7 @@ export default function Todo() {
                   label="Description"
                   placeholder="Enter Task Description here"
                   id="description"
-                  value={todo["description"]}
+                  value={state.todo["description"]}
                   onChange={handleInput}
                 />
               </div>
@@ -116,7 +153,7 @@ export default function Todo() {
                   id="status"
                   options={status}
                   onSelect={handleInput}
-                  value={todo["status"]}
+                  value={state.todo["status"]}
                 />
               </div>
             </div>
@@ -124,9 +161,11 @@ export default function Todo() {
               <button
                 type="button"
                 class="btn btn-primary"
-                onClick={mode === "create" ? handleTodo : handleUpdateTodo}
+                onClick={
+                  state.mode === "create" ? handleTodo : handleUpdateTodo
+                }
               >
-                {mode === "create" ? "Create Task" : "Edit Task"}
+                {state.mode === "create" ? "Create Task" : "Edit Task"}
               </button>
             </div>
           </div>
@@ -137,12 +176,14 @@ export default function Todo() {
               label="Filter"
               id="filter"
               options={[{ label: "All", value: "all" }, ...status]}
-              onSelect={(e) => setFilter(e.target.value)}
-              value={filter}
+              onSelect={(e) =>
+                dispatch({ type: "UPDATE_FILTER", payload: e.target.value })
+              }
+              value={state.filter}
             />
           </div>
         </div>
-        <div className="row">{renderCards(todos, filter)}</div>
+        <div className="row">{renderCards(state.todos, state.filter)}</div>
       </div>
     </div>
   );
