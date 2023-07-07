@@ -6,8 +6,9 @@ import Home from "./Pages/home";
 import Aboutus from "./Pages/aboutus";
 import Contactus from "./Pages/contactus";
 import Shopping from "./Pages/shopping";
-import { Routes, Route, Link } from "react-router-dom";
+import { Routes, Route, NavLink } from "react-router-dom";
 import Blog from "./Pages/blog";
+import Learning from "./Pages/learning";
 
 // FUNCTIONAL COMPONENT
 function App() {
@@ -43,25 +44,57 @@ function App() {
         <div class="container-fluid">
           <span class="navbar-brand mb-0 h1">Navbar</span>
           <ul className="nav">
-            <Link to="/" className="nav-item">
+            <NavLink
+              to="/"
+              className={({ isActive, isPending }) =>
+                isPending ? "pending" : isActive ? "link active-link" : "link"
+              }
+            >
               <p>Home</p>
-            </Link>
-            <Link to="/aboutus" className="nav-item">
+            </NavLink>
+            <NavLink
+              to="/aboutus"
+              className={({ isActive, isPending }) =>
+                isPending ? "pending" : isActive ? "link active-link" : "link"
+              }
+            >
               <p>About Us</p>
-            </Link>
-            <Link to="/contactus" className="nav-item">
+            </NavLink>
+            <NavLink
+              to="/contactus"
+              className={({ isActive, isPending }) =>
+                isPending ? "pending" : isActive ? "link active-link" : "link"
+              }
+            >
               <p>Contact Us</p>
-            </Link>
-            <Link to="/shopping/mens-tshirt" className="nav-item">
+            </NavLink>
+            <NavLink
+              to="/shopping/mens-tshirt"
+              className={({ isActive, isPending }) =>
+                isPending ? "pending" : isActive ? "link active-link" : "link"
+              }
+            >
               <p>Shopping</p>
-            </Link>
-            <Link to="/todo" className="nav-item">
+            </NavLink>
+            <NavLink
+              to="/todo"
+              className={({ isActive, isPending }) =>
+                isPending ? "pending" : isActive ? "link active-link" : "link"
+              }
+            >
               <p>Todo App</p>
-            </Link>
+            </NavLink>
+            <NavLink
+              to="/learn"
+              className={({ isActive, isPending }) =>
+                isPending ? "pending" : isActive ? "link active-link" : "link"
+              }
+            >
+              <p>Learn</p>
+            </NavLink>
           </ul>
         </div>
       </nav>
-
       <Routes>
         <Route path="/" Component={Home} />
         <Route path="/aboutus" Component={Aboutus} />
@@ -69,6 +102,7 @@ function App() {
         <Route path="/shopping/:productCategory" Component={Shopping} />
         <Route path="/blog/:productCategory" Component={Blog} />
         <Route path="/todo" Component={Todo} />
+        <Route path="/learn" Component={Learning} />
       </Routes>
     </div>
   );

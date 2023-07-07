@@ -43,6 +43,13 @@
   background: red;
 }
 
+.circle {
+  width: 100px;
+  height: 100px;
+  background: red;
+  border-radius: 100%;
+}
+
 section.pricing {
   background: #007bff;
   background: linear-gradient(to right, #0062e6, #33aeff);
@@ -110,4 +117,28 @@ section.pricing {
 .page {
   width: 100%;
   height: 100vh;
+}
+
+.link {
+  width: 100px;
+  height: 40px;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: black;
+  > p {
+    margin: 0px;
+  }
+}
+
+.active-link {
+  background: tomato;
+  border-radius: 25px;
+  color: white;
+}
+
+.pending {
+  color: red;
+  font-weight: bolder;
 }
