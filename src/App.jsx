@@ -8,6 +8,7 @@ import Contactus from "./Pages/contactus";
 import Shopping from "./Pages/shopping";
 import { Routes, Route, Link } from "react-router-dom";
 import Blog from "./Pages/blog";
+import FormikForm from "./Pages/FormikForm";
 
 // FUNCTIONAL COMPONENT
 function App() {
@@ -69,6 +70,7 @@ function App() {
         <Route path="/shopping/:productCategory" Component={Shopping} />
         <Route path="/blog/:productCategory" Component={Blog} />
         <Route path="/todo" Component={Todo} />
+        <Route path="/formik" Component={FormikForm} />
       </Routes>
     </div>
   );
