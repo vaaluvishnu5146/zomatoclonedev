@@ -16,9 +16,12 @@ export const ProductsSlice = createSlice({
         state.products.push(...action.payload);
       }
     },
+    updateProduct: (state, action) => {},
+    deleteProduct: (state, action) => {},
   },
 });
 
 // Action creators are generated for each case reducer function
-export const { saveProducts } = ProductsSlice.actions;
+export const { saveProducts, updateProduct, deleteProduct } =
+  ProductsSlice.actions;
 export default ProductsSlice.reducer;
